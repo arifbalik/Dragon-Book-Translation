@@ -1,0 +1,107 @@
+\begin{center}
+\begin{tikzpicture}[->]
+\tikzstyle{rect} = [rectangle, minimum width=5cm, minimum height=0.5cm,text centered, draw=black]
+
+\node (code)   {konum = baslangic + oran * 60};
+\node (lex) [rect, below of=code, yshift=-0.01cm] {Lexical Analizör};   
+\node (token)   [below of=lex, yshift=0cm]{ $\langle\usebox{\id},1\rangle$ $\langle\usebox{\eq}\rangle$ $\langle\usebox{\id},2\rangle$ $\langle\usebox{\pl}\rangle$ $\langle\usebox{\id},3\rangle$ $\langle\usebox{\ml}\rangle$ $\langle\usebox{\nm}\rangle$};
+
+\node (syn) [rect, below of=token, yshift=0cm] {Sentaks Analizörü};   
+
+
+\node (eq) [below of=syn, yshift=0.5cm, xshift=-1cm]{=};   
+\node (sum) [below of=eq, yshift=0.5cm, xshift=1cm]{+};   
+\node (tok1) [left of=sum, yshift=0cm,xshift=-1.3cm]{$\langle\usebox{\id},1\rangle$};  
+\node (mlt) [below of=sum, yshift=0.5cm, xshift=1cm]{*};   
+\node (tok2) [left of=mlt, yshift=0cm,xshift=-1.2cm]{$\langle\usebox{\id},2\rangle$};  
+\node (sixty) [below of =mlt, xshift=0.85cm, yshift=0.5cm]{60};   
+\node (tok3) [left of=sixty, xshift=-1cm, yshift=-0.2cm]{$\langle\usebox{\id},3\rangle$};   
+\draw [black, -](mlt) -- (sixty);  
+\draw [black, -](mlt) -- (tok3);  
+\draw [black, -](sum) -- (mlt);  
+\draw [black, -](sum) -- (tok2);  
+\draw [black, -](eq) -- (sum);  
+\draw [black, -](eq) -- (tok1);  
+
+\node (smn) [rect, below of=tok3, yshift=0cm] {Semantik Analizör};   
+
+\node (eq2) [below of=smn, yshift=0.5cm, xshift=-1cm]{=};   
+\node (sum2) [below of=eq2, yshift=0.5cm, xshift=1cm]{+};   
+\node (tok12) [left of=sum2, yshift=0cm,xshift=-1.3cm]{$\langle\usebox{\id},1\rangle$};  
+\node (mlt2) [below of=sum2, yshift=0.5cm, xshift=1cm]{*};   
+\node (tok22) [left of=mlt2, yshift=0cm,xshift=-1.2cm]{$\langle\usebox{\id},2\rangle$};  
+\node (int) [below of =mlt2, xshift=0.85cm, yshift=0.5cm]{\textbf{intfloat}};   
+\node (sixty2) [below of =int, xshift=0cm, yshift=0.2cm]{60};   
+\node (tok32) [left of=int, xshift=-1cm, yshift=-0.2cm]{$\langle\usebox{\id},3\rangle$};   
+\draw [black, -](mlt2) -- (int);  
+\draw [black, -](mlt2) -- (tok32);  
+\draw [black, -](sum2) -- (mlt2);  
+\draw [black, -](sum2) -- (tok22);  
+\draw [black, -](eq2) -- (sum2);  
+\draw [black, -](eq2) -- (tok12);  
+\draw [black, -](int) -- (sixty2);  
+
+\node (mdt) [rect, below of=tok32, yshift=-0.2cm] {Ara Kod Üretici};   
+\node (cline) [ below of=mdt, yshift=-0.5cm, text width = 3cm] {
+	\textbf{t1 = intfloat(60) 
+		  t2 = id3 * t1\\ 
+		  t3 = id2 + t2\\
+		  id1 = t3
+		  }
+	
+	};   
+	
+\node (opt) [rect, below of=cline, yshift=-0.5cm] {Kod Optimizatörü};   
+
+\node (cline2) [ below of=opt, yshift=-0.1cm, text width = 3cm] {
+	\textbf{
+		  t1 = id3 * 60.0
+		  id1 = id2 + t1
+		  }
+	
+	};   
+	
+\node (gnr) [rect, below of=cline2, yshift=-0.1cm] {Kod Üretici};   
+
+\node (assm) [ below of=gnr, yshift=-0.8cm, text width = 4cm] {
+
+	\textbf{LDF R2, id3\\
+		 MULF R2, R2, $\#60.0$\\
+		 LDF R1, id2\\
+		 ADDF R1, R1, R2\\
+		 STF id1, R1
+		  }
+	
+	};   
+	
+	\node (r1_val) [rect, left of=syn, xshift=-5cm, yshift=-1cm, minimum width=2cm] {...}; 
+	\node (r1) [rect, left of=r1_val, xshift=-1cm, minimum width=2cm] {konum};   
+	\node (r2_val) [rect, below of=r1_val, yshift=0.5cm, minimum width=2cm] {...}; 
+	\node (r2) [rect, left of=r2_val, xshift=-1cm, minimum width=2cm] {baslangic};   
+	\node (r3_val) [rect, below of=r2_val, yshift=0.5cm, minimum width=2cm] {...}; 
+	\node (r3) [rect, left of=r3_val, xshift=-1cm, minimum width=2cm] {oran};   
+	\node (r3_val) [rect, below of=r3_val, yshift=0.25cm, minimum width=2cm,minimum height=1cm] {}; 
+	\node (r4) [rect, below of=r3, yshift=0.25cm, minimum width=2cm, minimum height=1cm] {};   
+	
+	\node (n1)[left of = r1, xshift=-0.3cm]   {1};
+	\node (n2)[left of = r2, xshift=-0.3cm]    {2};
+	\node (n3)[left of = r3, xshift=-0.3cm]    {3};
+	\node (s)[below of = r4, xshift=1cm]    {SEMBOL TABLOSU};
+	
+\draw [black](code) -- (lex);  
+\draw [black](lex) -- (token);  
+\draw [black](token) -- (syn);  
+\draw [black](syn) -- (sum);  
+\draw [black](tok3) -- (smn);  
+\draw [black](smn) -- (sum2);
+\draw [black](tok32) -- (mdt);  
+\draw [black](mdt) -- (cline);  
+\draw [black](cline) -- (opt);  
+\draw [black](opt) -- (cline2);  
+\draw [black](cline2) -- (gnr);  
+\draw [black](gnr) -- (assm);  
+
+\end{tikzpicture}
+
+Şekil 1.7: Bir atama işleminin çevrilmesi
+\end{center}

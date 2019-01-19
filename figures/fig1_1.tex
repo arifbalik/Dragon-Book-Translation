@@ -1,0 +1,16 @@
+\begin{center}
+\begin{tikzpicture}[->]
+
+\tikzstyle{rect} = [rectangle, minimum width=3cm, minimum height=1cm,text centered, draw=black]
+\node (src)  {kaynak program};
+\node (tr) [below of=src, yshift=-1.5cm] {hedef program};
+\node (dr) [rect, below of=src, yshift=-0.2cm] {Derleyici};   
+   
+\draw [black](src) -- (dr);  
+\draw [black](dr) -- (tr);  
+
+\end{tikzpicture}
+
+Şekil 1.1: Bir derleyici
+\end{center}
+

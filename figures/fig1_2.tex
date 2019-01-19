@@ -1,0 +1,17 @@
+\begin{center}
+\begin{tikzpicture}[->]
+
+\tikzstyle{rect} = [rectangle, minimum width=3cm, minimum height=1.5cm,text centered, draw=black]
+
+\node (in) [left of=src, xshift=-1.5cm] {girdi};
+\node (out)[right of=src, xshift=1.5cm]   {çıktı};
+\node (tr) [rect] {Hedef Program};   
+   
+\draw [black](in) -- (tr);  
+\draw [black](tr) -- (out);  
+
+\end{tikzpicture}
+
+Şekil 1.2: Hedef Programı Çalıştırmak
+
+\end{center}
