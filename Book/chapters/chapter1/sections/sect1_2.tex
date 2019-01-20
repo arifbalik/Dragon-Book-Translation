@@ -1,0 +1,115 @@
+\markboth{BÖLÜM 1. GİRİŞ}{1.2. BİR DERLEYİCİNİN YAPISI}
+\section{Bir Derleyicinin Yapısı}
+
+Bu noktaya kadar bir derleyiciye kaynak kodu, aynı semantik ile başka bir hedef programa eşleyen bir kutucuk olarak baktık. Eğer bu kutuyu biraz aralarsak aslında bu eşleme işleminin iki kısımdan oluştuğunu görürüz: analiz ve sentez.
+
+\textit{Analiz} kısmı kaynak kodu bileşenlerine ayırır ve bu parçalar üzerinde bir sentaks yapısı uygular. Ardından bu yapıyı, kaynak kodun bir ara temsilini oluşturmak için kullanır. Eğer analiz kısmı bu aşamada sözdizimisel olarak yanlış kullanılmış veya semantik olarak belirsiz bir durum bulursa kullanıcıya, gerekli aksiyonları alması için bilgilendirici mesajlar yollamalıdır. Analiz kısmı ayrıca kaynak kod hakkında da bilgi toplar ve bunu \textit{sembol tablosu} denen bir veri yapısına kaydeder, ardından ara temsili ile beraber sentez kısmına iletir.
+
+\setcounter{footnote}{0}
+\textit{Sentez} kısmı, istelilen programı ara program temsilinden ve sembol tablosundaki bilgilerden inşa eder. Derleyicinin analiz kısmı genellikle \textit{ön uç}\footnote{(İng.) Front end. (Ç.N.)} , sentez kısmı içine \textit{arka uç}\footnote{(İng.) Back end. (Ç.N.)}  olarak isimlendirilir.
+
+Derleme prosesini detaylı bir şekilde incelersek, kaynak programın her bir temsilini bir diğerine çeviren bir aşamalar dizisi görürüz. Tipik bir derleyicinin aşamalar halinde ayrılmış gösterimi Şekil 1.6'da gösterilmiştir. Pratikte birkaç aşama birlikte gruplanmış olabilir ve gruplandırılmış aşamalar arasındaki ara temsillerin açıkça belirtilmesine gerek yoktur. Tüm kaynak program hakkındaki bilgileri barındıran sembol tablosu derleyicinin tüm aşamaları tarafından kullanılır.
+
+\input{../../figures/fig1_6}
+
+Bazı derleyiciler ön uç ile arka uç arasında bir makina-bağımsız kod optimizatörü barındırırlar. Bu optimizasyon, aksi takdirde optimize edilmemiş bir ara form'u çevirecek olmasından dolayı, arka ucun daha iyi bir hedef program oluşturması için kullanılan, ara form üzerindeki transformasyonları gerçekleştiren bir aşamadır. Optimizasyon opsiyonel olduğundan dolayı, Şekil 1.6'da gösterilen bir veya her iki optimizasyon aşaması bazı durumlarda orada olmayabilir.
+
+\subsection{Lexical Analiz [10hr (until here)]}
+
+\setcounter{footnote}{0}
+
+Bir derleyicinin ilk aşaması \textit{lexical analiz} ya da \textit{tarama} olarak adlandırılır. Lexical analizör kaynak programı oluşturan karakter akışını okur ve onları \textit{sözcükbirim\footnote{(İng.) Lexeme. (Ç.N.)}} denilen mantıklı gruplara ayırır. Her bir sözcük birim için lexical analizör kendinden sonraki sentaks analizi aşaması için çıktı olarak aşağıda görülen formda bir belirteç\footnote{(İng.) Token. (Ç.N.) Bir derleyici için, bir veri dizisindeki en küçük mantıklı bilgi formu.} oluşturur.
+
+{\centering {\large $\langle$\textit{belirteç-adı, bağlı-değer}$\rangle$\par}}
+
+
+Belirteç'in içindeki ilk komponent olan \textit{belirteç-adı,} sentaks analizi boyunca kullanılan soyut bir semboldür, ikinci komponent \textit{bağlı-değer} ise bu belirteç için sembol tablosundaki bir girdiyi gösterir. Sembol-tablosu'ndaki bilgi girdileri, semantik analiz ve koş oluşturmak için gereklidir.
+
+Örneğin, atama durumunu içeren bir kaynak programı düşünün
+
+\begin{lstlisting}
+ 		konum = baslangic + oran * 60        (1.1)
+\end{lstlisting}
+
+Bu atamadaki karakterler aşağıda gösterilen sözcükbirim'lere gruplanabilir ve sentaks analizine geçirilmek üzere belirteçler oluşturulabilir:
+
+\begin{enumerate}
+
+  \item {\fontfamily{ttfamily}\selectfont konum }, $\langle$\textbf{id}, 1$\rangle$ şeklinde yazılabilecek bir sözcükbirimdir. \textbf{id} burada kimlik yerine geçen soyut bir semboldür, 1 ise, {\fontfamily{ttfamily}\selectfont konum }'un sembol-tablosu'ndaki girdisini gösterir. Bir kimlik için sembol-tablosu girdisi, bu kimlik için isim ve tip gibi bilgileri tutar.
+  
+  \item Atama sembolü, $\langle$=$\rangle$ şeklinde yazılabilinecek bir sözcükbirim'dir. Belirteç'in herhangi bir bağlı-değer'i olmadığı için ikinci komponenti çıkardık. Belirteç-adı için \textbf{atama} gibi herhangi bir soyut sembol de kullanabilirdik, fakat simgelemde kolaylık olması açısından, soyut sembol için direkt olarak sözcükbirim'in kendisini seçtik.
+  
+   \item {\fontfamily{ttfamily}\selectfont baslangic}, $\langle$\textbf{id}, 2$\rangle$ gibi bir belirteçle yazılabilecek bir sözcükbirim'dir. 2, sembol-tablosu'ndaki {\fontfamily{ttfamily}\selectfont baslangic} girdisini gösterir.
+   
+   \item +, $\langle$+$\rangle$ belirteci olarak yazılabilicek bir sözcükbirim'dir.
+   
+   \item {\fontfamily{ttfamily}\selectfont oran}, $\langle$\textbf{id}, 3$\rangle$ gibi bir belirteçle yazılabilecek bir sözcükbirim'dir. 3, sembol-tablosu'ndaki {\fontfamily{ttfamily}\selectfont oran} girdisini gösterir.
+   
+   \item *, $\langle$*$\rangle$ belirteci olarak yazılabilicek bir sözcükbirim'dir.
+   
+   \renewcommand{\thefootnote}{\arabic{footnote}}
+   \setcounter{footnote}{0}
+   
+   \item 60, $\langle$60$\rangle$ belirteci olarak yazılabilicek bir sözcükbirim'dir.\footnote{Teknik olarak, 60 sözcükbirim'i için, $\langle$\textbf{id}, 4$\rangle$ şeklinde bir token yapmamız ve 4'ün sembol tablosunda 60 tamsayısını göstermesi gerekir, fakat sayı belirteçleri konusunu Bölüm 2'ye kadar ertelememiz gerekiyor. Bölüm 3'te ise lexical analiz teknikleri işlenecek} 
+   
+   \renewcommand{\thefootnote}{\fnsymbol{footnote}}
+    
+\end{enumerate} 
+
+Sözcükbirimleri arasındaki boşluklar lexical analizör tarafından çıkarılacaktır.
+
+Şekil 1.7, lexical analiz'den sonra, belirteç dizisi şeklinde, (1.1)'deki atama ifadesi gösterilir.
+\newsavebox\id
+\newsavebox\eq
+\newsavebox\pl
+\newsavebox\ml
+\newsavebox\nm
+\savebox\nm{\lstinline{60}}
+\savebox\ml{\lstinline{*}}
+\savebox\pl{\lstinline{+}}
+\savebox\eq{\lstinline{=}}
+\savebox\id{\lstinline{id}}
+
+\input{../../../figures/fig1_7}
+
+\begin{lstlisting}[mathescape]
+ 		 $\langle\usebox{\id},1\rangle$ $\langle\usebox{\eq}\rangle$ $\langle\usebox{\id},2\rangle$ $\langle\usebox{\pl}\rangle$ $\langle\usebox{\id},3\rangle$ $\langle\usebox{\ml}\rangle$ $\langle\usebox{\nm}\rangle$			             (1.2)
+\end{lstlisting}
+
+Bu gösterimde belirteç adları, =, + ve *, atama, toplama ve çıkarma işlemleri için soyut sembollerdir.
+
+
+\subsection{Sentaks Analizi [52min]}
+Derleyicinin ikinci aşaması sentaks analizi'dir\footnote{Bazen \textit{Syntax Analysis} bazen de \textit{Parsing} olarak gösterilir (Ç.N.)}. Sentaks analizi, lexical analizör tarafından oluşturulan belirteçlerin ilk komponentlerini, bu belirteç akışının gramatik yapısını tasvir eden ağaç yapısı türünde bir ara kod gösterimi olşturmak için kullanır. Sentaks ağacı tipik bir gösterimdir; her iç düğüm bir operasyonu, ve bu düğümlerin çocuk düğümleri ise operasyonun argümanlarını temsil eder. (1.2)'deki belirteç akışı'nın sentaks ağacı Şekil 1.7'de sentaktik analizör'ün çıktısı olarak gösterilmiştir.  Bu ağaç, atamadaki operasyonların çalıştırılma sırasını gösterir.
+\begin{lstlisting}
+ 	     konum = baslangic + oran * 60        
+\end{lstlisting}
+Ağaç, * ile etiketlenmiş, $\langle$\textbf{id}, 3$\rangle$'ün sol çocuk, 60 tamsayısının da sağ çocuk düğümü olarak tanımlandığı bir iç düğüme sahiptir. $\langle$\textbf{id}, 3$\rangle$, \textbf{oran} tanımlayıcısını temsil eder. * ile etiketlenmiş düğüm, ilk önce \textbf{oran}'ın değeri ile 60'ı çarpmamız gerektiğini belirgin bir şekilde gösterir. + ile işaretlenmiş düğüm bu çarpım değerini \textbf{baslangic}'ın değeri ile toplamamız gerektiğini belirtir. = şeklinde etiketlenmiş, ağacın kökü olan düğüm, bu toplamın sonucunu \textbf{konum} belirtecinin olduğu lokasyona kaydetmemiz gerektiğini gösterir. Bu operasyonların sırası, geleneksel aritmetik ile tutarlıdır; çarpımın, toplamadan daha yüksek önceliği vardır, dolayısıyla çarpma operasyonu, toplamadan önce gerçekleştirilmelidir.
+
+Bundan sonra gelen derleyici aşamaları gramatik yapıyı, hedef programı üretmek için kaynak programın analizinde yardımcı olarak kullanırlar. Bölüm 4'te bağlam-duyarsız gramerleri programlama dillerinin yapısını belirtmek için kullanacağız ve belirli sınıf ve gramerlerden verimli sentaks analizörleri'ni otomatik olarak oluşturacak algoritmaları tartışacağız. Bölüm 2 ve 5'te sentaks-yönelimli tanımlamaların, programlama dili yapılarını çevirmede yardımcı olabileceğini göreceğiz.
+
+\subsection{Semantik Analiz [34min]}
+\textit{Semantik analizör}, kaynak programın dilin tanımlamalarına göre semantik tutarlılığını, sentaks ağacını ve sembol tablosundaki bilgileri kullanarak kontrol eder. Ayrıca ileride, ara kod üretiminde kullanılmak üzere, tip bilgilerini toplayarak bunu ya sentaks ağacında ya da sembol tablosunda saklar.
+
+Semantik analiz'in önemli bir parçası, derleyicinin her bir operatör için, o operatörün terimlerinin uyuşup uyuşmadığını kontrol ettiği \textit{tip-kontrolü}'dür. Örneğin, birçok programlama dili bir dizinin indis değerlerinin tamsayı olmasını ister; derleyici, dizi indisi belirtmek için eğer ondalık bir sayı kullanılmışsa, bunun için bir hata raporu vermelidir.
+
+Dil spesifikasyonları, \textit{zorlama}\footnote{(İng.) Coercion (Ç.N.)} adı verilen bazı tip çevrimlerine izin veriyor olabilir. Örneğin bir binary aritmetik operatörü bir tamsayı çiftine ya da bir ondalıklı sayı çiftine uygulanabilir. Eğer operatör bir tamsayı ve bir ondalıklı sayıya uygulanmışsa, derleyici tamsayıyı ondalıklıya, ya da ondalıklı sayıyı tamsayıya çevirebilir veya zorlayabilir.
+
+Böyle bir zorlama Şekil 1.7'de görünür. Farz edin ki, \textbf{konum}, \textbf{baslangic} ve \textbf{oran} ondalık sayı olarak tanımlanmış ve \textbf{60} ise kendinden dolayı bir tamsayı olsun. Şekil 1.7'deki semantik analizörün içindeki tip-kontrolcüsü * operatörünün bir ondalık sayı olan \textbf{oran}, ve bir tam sayı olan \textbf{60} için uygulandığını fark edecek. Bu durumda tamsayı, bir ondalıklı sayıya çevrilebilir. Şekil 1.7'de semantik analizörün \textbf{inttofloat} için fazladan bir düğümü olduğuna dikkat edin; ki açıkça tamsayı türündeki bir argümanı ondalıklı sayıya çevirir. Tip kontrolü ve semantik analiz Bölüm 6'da tartışılacaktır.
+
+\subsection{Ara Kod Üretimi [0min]}
+Bir kaynak programı hedef programa çevirme sürecinde, derleyici çeşitli formlarda birden fazla ara kod üretebilir. Sentaks ağaçları bir ara gösterim formlarıdır; bu formlar sentaks ve semantik analizinde yaygın olarak kullanılırlar.
+
+Kaynak programın sentaks ve semantik analizinden sonra, birçok derleyici belirgin bir düşük-seviye ya da makine-tipi bir ara gösterim oluşturur; bunu soyut bir makina için bir program olarak düşünebiliriz. Bu ara gösterimin iki önemli özelliği olmalıdır: üretilmesi ve kaynak makineye çevrilmesi kolay olmalıdır.
+
+Bölüm 6'da, bir dizi assembly benzeri, komut barındıran (komut başına üç terim), \textit{üç-adress} denen bir ara formu inceleyeceğiz. Her terim bir register olarak davranabilir. Şekil 1.7'deki ara kod üreticinin çıktısı, üç-adress kod dizisi içerir.
+
+\begin{center}
+\begin{flushleft}
+t1 = intfloat(60) \\
+t2 = id3 * t1\\ 
+t3 = id2 + t2\\
+id1 = t3
+\end{flushleft}
+		  
+\end{center}
