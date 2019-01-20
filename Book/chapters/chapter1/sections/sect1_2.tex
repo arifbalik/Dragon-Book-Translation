@@ -10,7 +10,7 @@ Bu noktaya kadar bir derleyiciye kaynak kodu, aynı semantik ile başka bir hede
 
 Derleme prosesini detaylı bir şekilde incelersek, kaynak programın her bir temsilini bir diğerine çeviren bir aşamalar dizisi görürüz. Tipik bir derleyicinin aşamalar halinde ayrılmış gösterimi Şekil 1.6'da gösterilmiştir. Pratikte birkaç aşama birlikte gruplanmış olabilir ve gruplandırılmış aşamalar arasındaki ara temsillerin açıkça belirtilmesine gerek yoktur. Tüm kaynak program hakkındaki bilgileri barındıran sembol tablosu derleyicinin tüm aşamaları tarafından kullanılır.
 
-\input{../../figures/fig1_6}
+\input{figures/fig1_6}
 
 Bazı derleyiciler ön uç ile arka uç arasında bir makina-bağımsız kod optimizatörü barındırırlar. Bu optimizasyon, aksi takdirde optimize edilmemiş bir ara form'u çevirecek olmasından dolayı, arka ucun daha iyi bir hedef program oluşturması için kullanılan, ara form üzerindeki transformasyonları gerçekleştiren bir aşamadır. Optimizasyon opsiyonel olduğundan dolayı, Şekil 1.6'da gösterilen bir veya her iki optimizasyon aşaması bazı durumlarda orada olmayabilir.
 
@@ -70,7 +70,7 @@ Sözcükbirimleri arasındaki boşluklar lexical analizör tarafından çıkarı
 \savebox\eq{\lstinline{=}}
 \savebox\id{\lstinline{id}}
 
-\input{../../../figures/fig1_7}
+\input{figures/fig1_7}
 
 \begin{lstlisting}[mathescape]
  		 $\langle\usebox{\id},1\rangle$ $\langle\usebox{\eq}\rangle$ $\langle\usebox{\id},2\rangle$ $\langle\usebox{\pl}\rangle$ $\langle\usebox{\id},3\rangle$ $\langle\usebox{\ml}\rangle$ $\langle\usebox{\nm}\rangle$			             (1.2)

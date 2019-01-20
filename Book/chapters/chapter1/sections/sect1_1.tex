@@ -2,16 +2,16 @@
 
 Basitçe, derleyici, bir dilde yazılmış -\textit{kaynak} dil- herhangi bir programı okuyup başka bir dile -\textit{hedef} dil -  eşdeğer olarak çeviren bir programdır; bkz. Şekil 1.1. Derleyicinin önemli bir rölü, dönüşüm sırasında kaynak dilde tespit ettiği hataları bildirmesidir.
 
-\input{../../../figures/fig1_1}
+\input{figures/fig1_1}
 
 Eğer hedef program çalıştırılabilir bir makine-dili programıysa, kullanıcı tarafından girdileri işlemesi ve çıktı üretmesi için kullanılabilir; bkz. Şekil 1.2.
 
-\input{../../figures/fig1_2}
+\input{figures/fig1_2}
 
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
 \textit{Yorumlayıcı\footnote{(İng.) Interpreter. (Ç.N.)}} da yaygın bir dil işlemci tipidir. Şekil 1.3'te görüldüğü gibi hedef programını üretirken bunu çevrim olarak yapmaktansa, yorumlayıcı, kaynak programın içindeki komutları direkt olarak, kullanıcı tarafından sağlanan girdiler üzerinden çalıştırır.
 
-\input{../../../figures/fig1_3}
+\input{figures/fig1_3}
 
 Girdileri çıktılara eşleyen bir yorumlayıcıdansa, derleyici tarafından üretilmiş bir makine-dili hedef programı genellikle daha hızlıdır. Bununla beraber, bir yorumlayıcı, hataları genellikle bir derleyiciden daha iyi teşhis edebilir, çünkü yorumlayıcı kaynak programı satır satır çalıştırır.
 
@@ -20,7 +20,7 @@ Girdileri çıktılara eşleyen bir yorumlayıcıdansa, derleyici tarafından ü
 
 Girdilerin çıktılara dönüştürülmesini hızlandırmak için, \textit{tam-zamanında} derleyiciler denilen bazı Java derleyicileri, bytecode'ları ara program girdileri işlemeden önce,  anlık olarak makine diline çevirir. 
 
-\input{../../../figures/fig1_4}
+\input{figures/fig1_4}
 
 Şekil 1.5'te gösterildiği gibi bir derleyiciye ek olarak, çalıştırılabilir bir hedef program oluşturmak için birkaç program daha gerekli olabilir. Bir kaynak program ayrı dosyalarda tutulan modüllerden oluşmuş olabilir. Bu kaynak kodu toparlamak bazen \textit{önişlemci} denlilen başka programlara havale edilir. Önişlemci ayrıca makro denilen kısayolları kaynak kodun ifadelerine çevirebilir.
 
@@ -41,4 +41,4 @@ Büyük programlar genelde parçalar halinde derlenir, böylece yeniden konumlan
 \setcounter{footnote}{0}
 \paragraph{Örnek 1.1.5:}  Bir çevirici'nin\footnote{(İng.) Assembler. (Ç.N.)} görevlerinden birkaçını tanımlayın.
 
-\input{../../../figures/fig1_5}
+\input{figures/fig1_5}
