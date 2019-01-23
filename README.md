@@ -18,7 +18,7 @@ Book
   --figures
     --fig1_1.tex
     --fig4_7.tex
-    --fig[section_no]\_[no].tex
+    --fig[section_no]_[no].tex
     --...
   --equations
     --eq1_1.tex
